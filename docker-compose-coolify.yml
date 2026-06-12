@@ -95,7 +95,7 @@ services:
       - FORCE_SSL=true
       - ENABLE_ACCOUNT_SIGNUP=${ENABLE_ACCOUNT_SIGNUP:-false}
       - REDIS_URL=redis://redis:6379
-      - POSTGRES_HOST=postgres-chatwoot
+      - POSTGRES_HOST=postgrescw
       - POSTGRES_USERNAME=postgres
       - POSTGRES_PASSWORD=NH_Secure_DB_2024_P
       - POSTGRES_DATABASE=chatwoot
@@ -239,7 +239,7 @@ services:
       NODE_ENV: production
       PORT: 3000
       LOG_LEVEL: info
-      DATABASE_URL: postgresql://kanbancw:NH_Secure_DB_2024_P@postgres-kanban:5432/kanbancw?schema=public
+      DATABASE_URL: postgresql://kanbancw:NH_Secure_DB_2024_P@postgreskanban:5432/kanbancw?schema=public
       UPLOAD_DIR: /app/uploads
       KANBANCW_DOMAIN: ${KANBANCW_DOMAIN:-kanban.novohorizonte.com}
       CHATWOOT_DOMAIN: ${CHATWOOT_DOMAIN:-chat.novohorizonte.com}
