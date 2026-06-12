@@ -123,8 +123,6 @@ services:
       - EVOLUTION_PUBLIC_S3=false
     labels:
       - "coolify.port=3000"
-    ports:
-      - "3000:3000"
     networks:
       - coolify
     healthcheck:
