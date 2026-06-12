@@ -203,6 +203,9 @@ services:
   # EVOLUTION GO CONNECTOR
   # ==========================================
   evo_go_connector:
+    build:
+      context: ./connector
+      dockerfile: Dockerfile
     image: astraonline/evo-go-connector:latest
     container_name: evo-go-connector
     environment:
