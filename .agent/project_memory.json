@@ -1,0 +1,24 @@
+{
+  "project_name": "Novo Horizonte - Intelligence Hub Comercial",
+  "project_type": "hybrid_system",
+  "stack": {
+    "local_extractor": "Node.js + oracledb (Oracle -> Supabase)",
+    "cloud_dashboard": "React + Vite + Tailwind (Premium UI)",
+    "database": "PostgreSQL (Supabase)",
+    "integrations": ["Chatwoot API", "n8n (Optional)"]
+  },
+  "modules": [
+    "oracle-to-cloud-sync",
+    "cloud-webhook-router",
+    "premium-management-dashboard"
+  ],
+  "progress": "Phase 12 Complete - Dashboard + Bridge Architecture finalized.",
+  "files_generated": [
+    "dashboard/src/App.tsx",
+    "dashboard/src/lib/supabase.ts",
+    "src/jobs/syncOracle.js",
+    "src/app.js",
+    "README.md",
+    "ARCHITECTURE.md"
+  ]
+}
