@@ -50,7 +50,7 @@ services:
     networks:
       - coolify
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U kanbancw"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -123,6 +123,7 @@ services:
       - EVOLUTION_PUBLIC_S3=false
     labels:
       - "coolify.fqdn=https://chat.novohorizonte.com:3000"
+      - "traefik.docker.network=coolify"
     networks:
       - coolify
     healthcheck:
@@ -189,6 +190,7 @@ services:
       - WEBHOOK_GLOBAL_ENABLED=false
     labels:
       - "coolify.fqdn=https://api.novohorizonte.com:3000"
+      - "traefik.docker.network=coolify"
     networks:
       - coolify
     volumes:
@@ -223,6 +225,7 @@ services:
       - coolify
     labels:
       - "coolify.fqdn=https://api2.novohorizonte.com:3000"
+      - "traefik.docker.network=coolify"
     volumes:
       - evo_go_connector_data:/app/data
     depends_on:
@@ -250,6 +253,7 @@ services:
       EVOLUTION_API_KEY: ${EVOLUTION_API_KEY:-NH_Global_Key_Evo_2026_APIKEY}
     labels:
       - "coolify.fqdn=https://kanban.novohorizonte.com:3000/api,https://kanban.novohorizonte.com:3000/webhooks,https://kanban.novohorizonte.com:3000/health,https://kanban.novohorizonte.com:3000/socket.io,https://kanban.novohorizonte.com:3000/dashboard-script,https://kanban.novohorizonte.com:3000/uploads"
+      - "traefik.docker.network=coolify"
     networks:
       - coolify
     volumes:
@@ -270,6 +274,7 @@ services:
       - coolify
     labels:
       - "coolify.fqdn=https://kanban.novohorizonte.com:80"
+      - "traefik.docker.network=coolify"
 
 # ==========================================
 # REDES E VOLUMES
