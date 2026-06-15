@@ -124,6 +124,16 @@ services:
     labels:
       - "coolify.fqdn=https://chat.novohorizonte.com:3000"
       - "traefik.docker.network=coolify"
+      - "traefik.enable=true"
+      - "traefik.http.services.chatwoot.loadbalancer.server.port=3000"
+      - "traefik.http.routers.chatwoot.rule=Host(`chat.novohorizonte.com`)"
+      - "traefik.http.routers.chatwoot.entrypoints=https"
+      - "traefik.http.routers.chatwoot.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.chatwoot.service=chatwoot"
+      - "traefik.http.routers.chatwoot-http.rule=Host(`chat.novohorizonte.com`)"
+      - "traefik.http.routers.chatwoot-http.entrypoints=http"
+      - "traefik.http.routers.chatwoot-http.middlewares=chatwoot-https"
+      - "traefik.http.middlewares.chatwoot-https.redirectscheme.scheme=https"
     networks:
       - coolify
     healthcheck:
@@ -189,8 +199,18 @@ services:
       - CHATWOOT_IMPORT_PLACEHOLDER_MEDIA_MESSAGE=false
       - WEBHOOK_GLOBAL_ENABLED=false
     labels:
-      - "coolify.fqdn=https://api.novohorizonte.com:3000"
+      - "coolify.fqdn=https://api.novohorizonte.com:8080"
       - "traefik.docker.network=coolify"
+      - "traefik.enable=true"
+      - "traefik.http.services.evolution.loadbalancer.server.port=8080"
+      - "traefik.http.routers.evolution.rule=Host(`api.novohorizonte.com`)"
+      - "traefik.http.routers.evolution.entrypoints=https"
+      - "traefik.http.routers.evolution.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.evolution.service=evolution"
+      - "traefik.http.routers.evolution-http.rule=Host(`api.novohorizonte.com`)"
+      - "traefik.http.routers.evolution-http.entrypoints=http"
+      - "traefik.http.routers.evolution-http.middlewares=evolution-https"
+      - "traefik.http.middlewares.evolution-https.redirectscheme.scheme=https"
     networks:
       - coolify
     volumes:
@@ -226,6 +246,16 @@ services:
     labels:
       - "coolify.fqdn=https://api2.novohorizonte.com:3000"
       - "traefik.docker.network=coolify"
+      - "traefik.enable=true"
+      - "traefik.http.services.connector.loadbalancer.server.port=3000"
+      - "traefik.http.routers.connector.rule=Host(`api2.novohorizonte.com`)"
+      - "traefik.http.routers.connector.entrypoints=https"
+      - "traefik.http.routers.connector.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.connector.service=connector"
+      - "traefik.http.routers.connector-http.rule=Host(`api2.novohorizonte.com`)"
+      - "traefik.http.routers.connector-http.entrypoints=http"
+      - "traefik.http.routers.connector-http.middlewares=connector-https"
+      - "traefik.http.middlewares.connector-https.redirectscheme.scheme=https"
     volumes:
       - evo_go_connector_data:/app/data
     depends_on:
