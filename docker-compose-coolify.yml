@@ -198,8 +198,6 @@ services:
     depends_on:
       - postgresevo
       - redis
-    expose:
-      - 3000
 
   # ==========================================
   # EVOLUTION GO CONNECTOR
