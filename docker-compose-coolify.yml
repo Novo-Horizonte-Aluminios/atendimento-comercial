@@ -198,6 +198,8 @@ services:
     depends_on:
       - postgresevo
       - redis
+    expose:
+      - 3000
 
   # ==========================================
   # EVOLUTION GO CONNECTOR
@@ -231,6 +233,8 @@ services:
     depends_on:
       - evolution_v2
       - chatwoot_app
+    expose:
+      - 3000
 
   # ==========================================
   # KANBAN CRM
