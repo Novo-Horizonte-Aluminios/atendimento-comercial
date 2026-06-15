@@ -260,6 +260,8 @@ services:
       - kanbancw-uploads:/app/uploads
     depends_on:
       - postgreskanban
+    expose:
+      - 3000
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'true'"]
       interval: 30s
@@ -270,6 +272,8 @@ services:
   kanban_frontend:
     image: astraonline/kanbanfront:0.0.2
     container_name: kanban-frontend
+    expose:
+      - 80
     networks:
       - coolify
     labels:
