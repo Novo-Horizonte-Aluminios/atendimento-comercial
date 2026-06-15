@@ -78,7 +78,7 @@ services:
   # CHATWOOT (APP & SIDEKIQ)
   # ==========================================
   chatwoot_app:
-    image: sendingtk/chatwoot:v4.4.2
+    image: chatwoot/chatwoot:latest
     container_name: chatwoot-app
     command: bundle exec rails s -p 3000 -b 0.0.0.0
     entrypoint: docker/entrypoints/rails.sh
@@ -142,7 +142,7 @@ services:
       - redis
 
   chatwoot_sidekiq:
-    image: sendingtk/chatwoot:v4.4.2
+    image: chatwoot/chatwoot:latest
     container_name: chatwoot-sidekiq
     command: bundle exec sidekiq -C config/sidekiq.yml
     entrypoint: docker/entrypoints/rails.sh
