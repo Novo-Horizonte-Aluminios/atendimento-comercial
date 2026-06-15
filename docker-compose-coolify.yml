@@ -171,7 +171,7 @@ services:
       - CONFIG_SESSION_PHONE_NAME=chrome    
       - DATABASE_ENABLED=true
       - DATABASE_PROVIDER=postgresql
-      - DATABASE_CONNECTION_URI=postgresql://postgres:EvoDB_P@ssw0rd!2026@postgresevo:5432/evolution
+      - DATABASE_CONNECTION_URI=postgresql://postgres:EvoDB_P%40ssw0rd!2026@postgresevo:5432/evolution
       - DATABASE_CONNECTION_CLIENT_NAME=evolution
       - DATABASE_SAVE_DATA_INSTANCE=true
       - DATABASE_SAVE_DATA_NEW_MESSAGE=true
