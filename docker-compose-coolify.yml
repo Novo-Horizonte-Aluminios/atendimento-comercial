@@ -57,23 +57,6 @@ services:
     volumes:
       - kanbancw-postgres:/var/lib/postgresql/data
 
-  postgresevo:
-    image: astraonline/postgrespgvector:2025
-    container_name: postgres-evolution
-    command: postgres -c config_file=/usr/share/postgresql/postgresql.conf.sample
-    environment:
-      - POSTGRES_PASSWORD=EvoDB_P@ssw0rd!2026
-      - TZ=America/Sao_Paulo
-    networks:
-      - coolify
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - postgres_dataevo:/var/lib/postgresql/data
-
   # ==========================================
   # CHATWOOT (APP & SIDEKIQ)
   # ==========================================
@@ -118,9 +101,6 @@ services:
       - SMTP_ENABLE_STARTTLS_AUTO=true
       - SMTP_OPENSSL_VERIFY_MODE=peer
       - MAILER_INBOUND_EMAIL_DOMAIN=${MAILER_INBOUND_EMAIL_DOMAIN:-seuemail@gmail.com}
-      - EVOLUTION_API_URL=${EVOLUTION_API_URL:-https://api.novohorizonte.com}
-      - EVOLUTION_ADMIN_TOKEN=${EVOLUTION_ADMIN_TOKEN:-NH_Admin_Evo_2026_Secure_TOKEN}
-      - EVOLUTION_PUBLIC_S3=false
     labels:
       - "coolify.fqdn=https://chat.novohorizonte.com:3000"
       - "traefik.docker.network=coolify"
@@ -158,89 +138,6 @@ services:
       - chatwoot_app
 
   # ==========================================
-  # EVOLUTION API V2
-  # ==========================================
-  evolution_v2:  
-    image: evoapicloud/evolution-api:v2.3.0
-    container_name: evolution-api
-    environment:
-      - SERVER_URL=https://api.novohorizonte.com
-      - AUTHENTICATION_TYPE=apikey
-      - AUTHENTICATION_API_KEY=evolution-global-apikey-2026
-      - AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES=true
-      - LANGUAGE=pt-BR
-      - CONFIG_SESSION_PHONE_CLIENT=WhatsAPI
-      - CONFIG_SESSION_PHONE_NAME=chrome    
-      - DATABASE_ENABLED=true
-      - DATABASE_PROVIDER=postgresql
-      - DATABASE_CONNECTION_URI=postgresql://postgres:EvoDB_P%40ssw0rd!2026@postgresevo:5432/evolution
-      - DATABASE_CONNECTION_CLIENT_NAME=evolution
-      - DATABASE_SAVE_DATA_INSTANCE=true
-      - DATABASE_SAVE_DATA_NEW_MESSAGE=true
-      - DATABASE_SAVE_MESSAGE_UPDATE=true
-      - DATABASE_SAVE_DATA_CONTACTS=true
-      - DATABASE_SAVE_DATA_CHATS=true
-      - CACHE_REDIS_ENABLED=true
-      - CACHE_REDIS_URI=redis://redis:6379/2
-      - CACHE_REDIS_PREFIX_KEY=evolution
-      - CACHE_REDIS_SAVE_INSTANCES=false
-      - CHATWOOT_ENABLED=true
-      - CHATWOOT_MESSAGE_READ=true
-      - CHATWOOT_MESSAGE_DELETE=true
-      - CHATWOOT_IMPORT_DATABASE_CONNECTION_URI=postgresql://postgres:NH_Secure_DB_2024_P@postgrescw:5432/chatwoot?sslmode=disable
-      - CHATWOOT_IMPORT_PLACEHOLDER_MEDIA_MESSAGE=false
-      - WEBHOOK_GLOBAL_ENABLED=false
-    labels:
-      - "coolify.fqdn=https://api.novohorizonte.com:8080"
-      - "traefik.docker.network=coolify"
-    networks:
-      - coolify
-    expose:
-      - 8080
-    volumes:
-      - evolution_instancesv2:/evolution/instances
-    depends_on:
-      - postgresevo
-      - redis
-
-  # ==========================================
-  # EVOLUTION GO CONNECTOR
-  # ==========================================
-  evo_go_connector:
-    build:
-      context: ./connector
-      dockerfile: Dockerfile
-    image: astraonline/evo-go-connector:latest
-    container_name: evo-go-connector
-    environment:
-      - PORT=3000
-      - NODE_ENV=production
-      - LOG_LEVEL=info
-      - CONNECTOR_SECRET=sua-chave-secreta-de-32-chars-mude-isto
-      - EVOLUTION_API_URL=https://api.novohorizonte.com
-      - EVOLUTION_API_KEY=evolution-global-apikey-2026
-      - CHATWOOT_API_URL=https://chat.novohorizonte.com
-      - CHATWOOT_PLATFORM_API_TOKEN=7cc017e022aec10e3c72cdc3a81ffdf12625b97587b8ca864bcf6d94715097a0
-      - KANBAN_API_URL=https://kanban.novohorizonte.com
-      - KANBAN_INTERNAL_URL=http://kanban_backend:3000
-      - CONNECTOR_WEBHOOK_URL=http://evo_go_connector:3000
-      - DATA_DIR=/app/data
-    networks:
-      - coolify
-    labels:
-      - "coolify.fqdn=https://api2.novohorizonte.com:3000"
-      - "traefik.docker.network=coolify"
-    volumes:
-      - evo_go_connector_data:/app/data
-    depends_on:
-      - evolution_v2
-      - chatwoot_app
-    expose:
-      - 3000
-    healthcheck:
-      disable: true
-
-  # ==========================================
   # KANBAN CRM
   # ==========================================
   kanban_backend:
@@ -257,8 +154,6 @@ services:
       KANBANCW_URL: ${KANBANCW_URL:-https://kanban.novohorizonte.com}
       CHATWOOT_API_URL: ${CHATWOOT_API_URL:-https://chat.novohorizonte.com}
       CORS_ORIGIN: ${CORS_ORIGIN:-https://kanban.novohorizonte.com,https://chat.novohorizonte.com}
-      EVOLUTION_API_URL: ${SERVER_URL:-https://api.novohorizonte.com}
-      EVOLUTION_API_KEY: ${EVOLUTION_API_KEY:-NH_Global_Key_Evo_2026_APIKEY}
     labels:
       - "coolify.fqdn=https://kanban.novohorizonte.com:3000/api,https://kanban.novohorizonte.com:3000/webhooks,https://kanban.novohorizonte.com:3000/health,https://kanban.novohorizonte.com:3000/socket.io,https://kanban.novohorizonte.com:3000/dashboard-script,https://kanban.novohorizonte.com:3000/uploads"
       - "traefik.docker.network=coolify"
@@ -298,10 +193,7 @@ networks:
 volumes:
   redis_data:
   postgres_datacw:
-  postgres_dataevo:
   kanbancw-postgres:
   chatwoot_data:
   chatwoot_public:
   kanbancw-uploads:
-  evolution_instancesv2:
-  evo_go_connector_data:
