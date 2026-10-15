@@ -7,13 +7,13 @@ services:
   redis:
     image: redis:alpine
     container_name: redis-central
-    command: ["redis-server", "--appendonly", "yes"]
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "NH_Redis_2024_P"]
     volumes:
       - astrachat_redis_data:/data
     networks:
       - coolify
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-a", "NH_Redis_2024_P", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -62,7 +62,7 @@ services:
       - DEFAULT_LOCALE=pt_BR
       - FORCE_SSL=true
       - ENABLE_ACCOUNT_SIGNUP=${ENABLE_ACCOUNT_SIGNUP:-false}
-      - REDIS_URL=redis://redis:6379
+      - REDIS_URL=redis://:NH_Redis_2024_P@redis:6379
       - POSTGRES_HOST=postgrescw
       - POSTGRES_USERNAME=postgres
       - POSTGRES_PASSWORD=NH_Secure_DB_2024_P
