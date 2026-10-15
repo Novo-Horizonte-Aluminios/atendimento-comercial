@@ -40,28 +40,11 @@ services:
     volumes:
       - postgres_datacw:/var/lib/postgresql/data
 
-  postgreskanban:
-    image: postgres:16-alpine
-    container_name: postgres-kanban
-    environment:
-      POSTGRES_DB: kanbancw
-      POSTGRES_USER: kanbancw
-      POSTGRES_PASSWORD: NH_Secure_DB_2024_P
-    networks:
-      - coolify
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U kanbancw"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - kanbancw-postgres:/var/lib/postgresql/data
-
   # ==========================================
   # CHATWOOT (APP & SIDEKIQ)
   # ==========================================
   chatwoot_app:
-    image: chatwoot/chatwoot:v4.10.1
+    image: astraonline/astrachat:v4.15.1-0.0.1
     container_name: chatwoot-app
     command: bundle exec rails s -p 3000 -b 0.0.0.0
     entrypoint: docker/entrypoints/rails.sh
@@ -122,7 +105,7 @@ services:
       - redis
 
   chatwoot_sidekiq:
-    image: chatwoot/chatwoot:v4.10.1
+    image: astraonline/astrachat:v4.15.1-0.0.1
     container_name: chatwoot-sidekiq
     command: bundle exec sidekiq -C config/sidekiq.yml
     entrypoint: docker/entrypoints/rails.sh
@@ -137,52 +120,6 @@ services:
       - redis
       - chatwoot_app
 
-  # ==========================================
-  # KANBAN CRM
-  # ==========================================
-  kanban_backend:
-    image: astraonline/kanbanback:0.0.2
-    container_name: kanban-backend
-    environment:
-      NODE_ENV: production
-      PORT: 3000
-      LOG_LEVEL: info
-      DATABASE_URL: postgresql://kanbancw:NH_Secure_DB_2024_P@postgreskanban:5432/kanbancw?schema=public
-      UPLOAD_DIR: /app/uploads
-      KANBANCW_DOMAIN: ${KANBANCW_DOMAIN:-kanban.novohorizonte.com}
-      CHATWOOT_DOMAIN: ${CHATWOOT_DOMAIN:-chat.novohorizonte.com}
-      KANBANCW_URL: ${KANBANCW_URL:-https://kanban.novohorizonte.com}
-      CHATWOOT_API_URL: ${CHATWOOT_API_URL:-https://chat.novohorizonte.com}
-      CORS_ORIGIN: ${CORS_ORIGIN:-https://kanban.novohorizonte.com,https://chat.novohorizonte.com}
-    labels:
-      - "coolify.fqdn=https://kanban.novohorizonte.com:3000/api,https://kanban.novohorizonte.com:3000/webhooks,https://kanban.novohorizonte.com:3000/health,https://kanban.novohorizonte.com:3000/socket.io,https://kanban.novohorizonte.com:3000/dashboard-script,https://kanban.novohorizonte.com:3000/uploads"
-      - "traefik.docker.network=coolify"
-    networks:
-      - coolify
-    volumes:
-      - kanbancw-uploads:/app/uploads
-    depends_on:
-      - postgreskanban
-    expose:
-      - 3000
-    healthcheck:
-      test: ["CMD-SHELL", "sh -c 'true'"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-
-  kanban_frontend:
-    image: astraonline/kanbanfront:0.0.2
-    container_name: kanban-frontend
-    expose:
-      - 80
-    networks:
-      - coolify
-    labels:
-      - "coolify.fqdn=https://kanban.novohorizonte.com:80"
-      - "traefik.docker.network=coolify"
-
 # ==========================================
 # REDES E VOLUMES
 # ==========================================
@@ -193,7 +130,5 @@ networks:
 volumes:
   redis_data:
   postgres_datacw:
-  kanbancw-postgres:
   chatwoot_data:
   chatwoot_public:
-  kanbancw-uploads:
