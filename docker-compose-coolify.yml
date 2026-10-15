@@ -9,7 +9,7 @@ services:
     container_name: redis-central
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
-      - redis_data:/data
+      - astrachat_redis_data:/data
     networks:
       - coolify
     healthcheck:
@@ -38,7 +38,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - postgres_datacw:/var/lib/postgresql/data
+      - astrachat_postgres_data:/var/lib/postgresql/data
 
   # ==========================================
   # CHATWOOT (APP & SIDEKIQ)
@@ -98,8 +98,8 @@ services:
       retries: 5
       start_period: 30s
     volumes:
-      - chatwoot_data:/app/storage
-      - chatwoot_public:/app/public
+      - astrachat_chatwoot_data:/app/storage
+      - astrachat_chatwoot_public:/app/public
     depends_on:
       - postgrescw
       - redis
@@ -113,8 +113,8 @@ services:
     networks:
       - coolify
     volumes:
-      - chatwoot_data:/app/storage
-      - chatwoot_public:/app/public
+      - astrachat_chatwoot_data:/app/storage
+      - astrachat_chatwoot_public:/app/public
     depends_on:
       - postgrescw
       - redis
@@ -128,7 +128,7 @@ networks:
     external: true
 
 volumes:
-  redis_data:
-  postgres_datacw:
-  chatwoot_data:
-  chatwoot_public:
+  astrachat_redis_data:
+  astrachat_postgres_data:
+  astrachat_chatwoot_data:
+  astrachat_chatwoot_public:
