@@ -44,7 +44,7 @@ services:
   # CHATWOOT (APP & SIDEKIQ)
   # ==========================================
   chatwoot_app:
-    image: tinovohorizonte/nhchat:v4.15.1
+    image: ghcr.io/apemerson/atendimentoet:v4.18.0-0.0.5
     container_name: chatwoot-app
     # Prepare/migrate the AstraChat database before Rails accepts traffic.
     # This is idempotent and keeps the persistent Postgres volume intact.
@@ -107,7 +107,7 @@ services:
       - redis
 
   chatwoot_sidekiq:
-    image: tinovohorizonte/nhchat:v4.15.1
+    image: ghcr.io/apemerson/atendimentoet:v4.18.0-0.0.5
     container_name: chatwoot-sidekiq
     command: bundle exec sidekiq -C config/sidekiq.yml
     entrypoint: docker/entrypoints/rails.sh
